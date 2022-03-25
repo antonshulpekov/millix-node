@@ -1,23 +1,22 @@
 import config from './config/config';
 
-let enabled       = true;
-console.disable   = () => enabled = false;
-console.enable    = () => enabled = true;
+let enabled = true;
+console.disable = () => enabled = false;
+console.enable = () => enabled = true;
 const _consoleLog = console.log;
-const filters     = [];
+const filters = [];
 
-console.addFilter = function(filter) {
+console.addFilter = function (filter) {
     filters.push(filter);
 };
 
-console.log = function() {
+console.log = function () {
     if (!enabled || !config.MODE_DEBUG) {
         return;
     }
-    let showLog = true;
-    if (filters.length > 0) {
-        const regex = new RegExp(`^\\[(${filters.join('|')})[^\\]]*\\]`, 'm');
-        showLog     = !!regex.exec(arguments[0]);
+    let showLog = false;
+    if (filters.length > 0 && filters.indexOf(arguments[0]) >= 0) {
+        showLog = true;
     }
     showLog && _consoleLog.apply(console, arguments);
 };
